@@ -71,13 +71,13 @@ label_for() {
 }
 
 label_by(){
-    if [ "$1" =~ .*"feature".*]; then
+    if [["$1" =~ .*"feature".*]]; then
         echo "feature"
-    elif [ "$1" =~ .*"bugfix".*]; then
+    elif [[ "$1" =~ .*"bugfix".*]]; then
         echo "bugfix"
-    elif [ "$1" =~ .*"fix".*]; then
+    elif [[ "$1" =~ .*"fix".*]]; then
         echo "bugfix"
-    elif [ "$1" =~ .*"config".*]; then
+    elif [[ "$1" =~ .*"config".*]]; then
         echo "config"
     else
         echo "update"
