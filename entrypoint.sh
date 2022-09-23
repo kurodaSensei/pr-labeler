@@ -44,9 +44,9 @@ autolabel() {
 }
 
 label_for() {
-  if [ "$1" -lt 10 ]; then
+  if [ "$1" -lt 50 ]; then
     label="size/xs"
-  elif [ "$1" -lt 100 ]; then
+  elif [ "$1" -lt 150 ]; then
     label="size/s"
   elif [ "$1" -lt 500 ]; then
     label="size/m"
