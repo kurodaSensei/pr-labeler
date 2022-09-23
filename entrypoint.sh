@@ -29,9 +29,10 @@ autolabel() {
 
   additions=$(echo "$body" | jq '.additions')
   deletions=$(echo "$body" | jq '.deletions')
+  title=$(echo "$body" | jq '.title')
   total_modifications=$(echo "$additions + $deletions" | bc)
   label_to_add=$(label_for "$total_modifications")
-
+  label_type=$(label_by "$title")
   echo "Labeling pull request with $label_to_add"
 
   curl -sSL \
@@ -40,6 +41,16 @@ autolabel() {
     -X POST \
     -H "Content-Type: application/json" \
     -d "{\"labels\":[\"${label_to_add}\"]}" \
+    "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels"
+
+  echo "Labeling pull request by type with $label_type"
+
+  curl -sSL \
+    -H "${AUTH_HEADER}" \
+    -H "${API_HEADER}" \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d "{\"labels\":[\"${label_type}\"]}" \
     "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels"
 }
 
@@ -57,6 +68,20 @@ label_for() {
   fi
 
   echo "$label"
+}
+
+label_by(){
+    if [ "$1" =~ .*"feature".*]; then
+        echo "feature"
+    elif [ "$1" =~ .*"bugfix".*]; then
+        echo "bugfix"
+    elif [ "$1" =~ .*"fix".*]; then
+        echo "bugfix"
+    elif [ "$1" =~ .*"config".*]; then
+        echo "config"
+    else
+        echo "update"
+    fi
 }
 
 autolabel
