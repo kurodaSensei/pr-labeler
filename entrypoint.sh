@@ -30,6 +30,7 @@ autolabel() {
   additions=$(echo "$body" | jq '.additions')
   deletions=$(echo "$body" | jq '.deletions')
   title=$(echo "$body" | jq '.title')
+  assignee=$(echo "$body" | jq '.user.login')
   total_modifications=$(echo "$additions + $deletions" | bc)
   label_to_add=$(label_for "$total_modifications")
   label_type=$(label_by "$title")
@@ -52,6 +53,16 @@ autolabel() {
     -H "Content-Type: application/json" \
     -d "{\"labels\":[\"${label_type}\"]}" \
     "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/labels"
+
+  echo "Assign pull request"
+
+  curl -sSL \
+    -H "${AUTH_HEADER}" \
+    -H "${API_HEADER}" \
+    -X POST \
+    -H "Content-Type: application/json" \
+    -d "{\"assignees\":[\"${assignee}\"]}" \
+    "${URI}/repos/${GITHUB_REPOSITORY}/issues/${number}/assignees"
 }
 
 label_for() {
