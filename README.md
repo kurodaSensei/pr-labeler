@@ -1,1 +1,1 @@
-# pr-tagger
+# pr-labeler
